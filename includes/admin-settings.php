@@ -89,7 +89,7 @@ function brs_ga4_gtm_tracking_render_settings_page() {
                     <th scope="row"><label for="brs_gtm_container_id">GTM Container ID</label></th>
                     <td>
                         <input type="text" id="brs_gtm_container_id" class="regular-text" name="brs_ga4_gtm_tracking_options[gtm_container_id]" value="<?php echo esc_attr( $options['gtm_container_id'] ); ?>" placeholder="GTM-XXXXXXX">
-                        <p class="description">Example: GTM-W967ZNG</p>
+                        <p class="description">Example: GTM-XXXXXXX</p>
                     </td>
                 </tr>
 

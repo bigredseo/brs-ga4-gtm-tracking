@@ -1,8 +1,9 @@
 <?php
 /**
  * Plugin Name: BRS GA4 GTM Tracking
- * Description: WordPress plugin by Big Red SEO for loading Google Tag Manager and supporting GA4 tracking across WordPress and WooCommerce sites.
- * Version: 1.0.2
+ * Plugin URI: https://github.com/bigredseo/brs-ga4-gtm-tracking
+ * Description: WordPress plugin by Big Red SEO for direct Google Analytics 4 or Google Tag Manager tracking across WordPress and WooCommerce sites.
+ * Version: 1.1.0
  * Author: Big Red SEO
  * Author URI: https://www.bigredseo.com/
  * Text Domain: brs-ga4-gtm-tracking
@@ -12,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'BRS_GA4_GTM_TRACKING_VERSION', '1.0.2' );
+define( 'BRS_GA4_GTM_TRACKING_VERSION', '1.1.0' );
 define( 'BRS_GA4_GTM_TRACKING_FILE', __FILE__ );
 define( 'BRS_GA4_GTM_TRACKING_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BRS_GA4_GTM_TRACKING_URL', plugin_dir_url( __FILE__ ) );
@@ -59,3 +60,33 @@ function brs_ga4_gtm_tracking_activate() {
     update_option( 'brs_ga4_gtm_tracking_options', array_merge( $defaults, $existing ) );
 }
 register_activation_hook( __FILE__, 'brs_ga4_gtm_tracking_activate' );
+
+
+/**
+ * Add a Settings shortcut to the plugin action links.
+ */
+function brs_ga4_gtm_tracking_plugin_action_links( $links ) {
+    $settings_url = admin_url( 'options-general.php?page=brs-ga4-gtm-tracking' );
+
+    array_unshift(
+        $links,
+        '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'brs-ga4-gtm-tracking' ) . '</a>'
+    );
+
+    return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'brs_ga4_gtm_tracking_plugin_action_links' );
+
+/**
+ * Add plugin site and changelog links to the plugin row metadata.
+ */
+function brs_ga4_gtm_tracking_plugin_row_meta( $links, $file ) {
+    if ( plugin_basename( __FILE__ ) !== $file ) {
+        return $links;
+    }
+
+    $links[] = '<a href="' . esc_url( admin_url( 'options-general.php?page=brs-ga4-gtm-tracking#brs-changelog' ) ) . '">' . esc_html__( 'Changelog', 'brs-ga4-gtm-tracking' ) . '</a>';
+
+    return $links;
+}
+add_filter( 'plugin_row_meta', 'brs_ga4_gtm_tracking_plugin_row_meta', 10, 2 );

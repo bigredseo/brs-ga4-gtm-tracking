@@ -182,27 +182,6 @@ function brs_ga4_gtm_tracking_render_settings_page() {
             </tbody>
         </table>
 
-        <hr>
-
-        <h2 id="brs-changelog">Changelog</h2>
-        <p>The condensed changelog is intended for plugin users. The technical changelog contains implementation details for developers and maintainers.</p>
-        <?php
-        $changelog_files = array(
-            'User Changelog'      => BRS_GA4_GTM_TRACKING_DIR . 'CHANGELOG.md',
-            'Technical Changelog' => BRS_GA4_GTM_TRACKING_DIR . 'TECHNICAL-CHANGELOG.md',
-        );
-
-        foreach ( $changelog_files as $label => $file_path ) :
-            if ( ! is_readable( $file_path ) ) {
-                continue;
-            }
-            ?>
-            <details style="max-width: 900px; margin: 12px 0;" <?php echo 'User Changelog' === $label ? 'open' : ''; ?>>
-                <summary><strong><?php echo esc_html( $label ); ?></strong></summary>
-                <pre style="white-space: pre-wrap; background: #fff; border: 1px solid #ccd0d4; padding: 16px; max-height: 520px; overflow: auto;"><?php echo esc_html( file_get_contents( $file_path ) ); ?></pre>
-            </details>
-        <?php endforeach; ?>
-
         <script>
         (function() {
             var radios = document.querySelectorAll('input[name="brs_ga4_gtm_tracking_options[tracking_method]"]');

@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function brs_ga4_gtm_tracking_get_default_options() {
     return array(
+        'tracking_method'              => 'gtm',
         'gtm_container_id'             => '',
         'ga4_measurement_id'           => '',
         'exclude_admins'               => 1,
@@ -31,6 +32,19 @@ function brs_ga4_gtm_tracking_get_options() {
     }
 
     return array_merge( brs_ga4_gtm_tracking_get_default_options(), $options );
+}
+
+/**
+ * Get the active tracking method.
+ */
+function brs_ga4_gtm_tracking_get_method( $options = null ) {
+    if ( ! is_array( $options ) ) {
+        $options = brs_ga4_gtm_tracking_get_options();
+    }
+
+    $method = isset( $options['tracking_method'] ) ? sanitize_key( $options['tracking_method'] ) : 'gtm';
+
+    return in_array( $method, array( 'direct', 'gtm' ), true ) ? $method : 'gtm';
 }
 
 /**

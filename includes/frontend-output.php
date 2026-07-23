@@ -13,6 +13,7 @@ function brs_ga4_gtm_tracking_output_frontend_config() {
 
     $options = brs_ga4_gtm_tracking_get_options();
 
+    $method = brs_ga4_gtm_tracking_get_method( $options );
     $ga4_id = brs_ga4_gtm_tracking_clean_ga4_id( $options['ga4_measurement_id'] );
 
     if ( empty( $ga4_id ) ) {
@@ -22,6 +23,7 @@ function brs_ga4_gtm_tracking_output_frontend_config() {
     $content_context = brs_ga4_gtm_tracking_get_content_context();
 
     $config = array(
+        'tracking_method'     => $method,
         'ga4_measurement_id' => $ga4_id,
         'site_url'           => home_url(),
         'current_url'        => brs_ga4_gtm_tracking_get_current_url(),
@@ -56,6 +58,11 @@ function brs_ga4_gtm_tracking_output_gtm_head() {
     }
 
     $options = brs_ga4_gtm_tracking_get_options();
+
+    if ( 'gtm' !== brs_ga4_gtm_tracking_get_method( $options ) ) {
+        return;
+    }
+
     $gtm_id  = brs_ga4_gtm_tracking_clean_gtm_id( $options['gtm_container_id'] );
 
     if ( empty( $gtm_id ) ) {
@@ -89,6 +96,11 @@ function brs_ga4_gtm_tracking_output_gtm_body() {
     }
 
     $options = brs_ga4_gtm_tracking_get_options();
+
+    if ( 'gtm' !== brs_ga4_gtm_tracking_get_method( $options ) ) {
+        return;
+    }
+
     $gtm_id  = brs_ga4_gtm_tracking_clean_gtm_id( $options['gtm_container_id'] );
 
     if ( empty( $gtm_id ) ) {
@@ -106,3 +118,34 @@ function brs_ga4_gtm_tracking_output_gtm_body() {
     <?php
 }
 add_action( 'wp_body_open', 'brs_ga4_gtm_tracking_output_gtm_body', 1 );
+
+
+/**
+ * Load the bundled tracking engine when Direct GA4 is selected.
+ */
+function brs_ga4_gtm_tracking_enqueue_direct_tracking() {
+    if ( brs_ga4_gtm_tracking_is_tracking_excluded() ) {
+        return;
+    }
+
+    $options = brs_ga4_gtm_tracking_get_options();
+
+    if ( 'direct' !== brs_ga4_gtm_tracking_get_method( $options ) ) {
+        return;
+    }
+
+    $ga4_id = brs_ga4_gtm_tracking_clean_ga4_id( $options['ga4_measurement_id'] );
+
+    if ( empty( $ga4_id ) ) {
+        return;
+    }
+
+    wp_enqueue_script(
+        'brs-ga4-direct-tracking',
+        BRS_GA4_GTM_TRACKING_URL . 'assets/js/brs-ga4-direct-tracking.js',
+        array(),
+        BRS_GA4_GTM_TRACKING_VERSION,
+        false
+    );
+}
+add_action( 'wp_enqueue_scripts', 'brs_ga4_gtm_tracking_enqueue_direct_tracking', 5 );

@@ -28,6 +28,8 @@ function brs_ga4_gtm_tracking_sanitize_options( $input ) {
 
     $output = array();
 
+    $tracking_method = isset( $input['tracking_method'] ) ? sanitize_key( $input['tracking_method'] ) : $defaults['tracking_method'];
+    $output['tracking_method'] = in_array( $tracking_method, array( 'direct', 'gtm' ), true ) ? $tracking_method : $defaults['tracking_method'];
     $output['gtm_container_id']             = brs_ga4_gtm_tracking_clean_gtm_id( isset( $input['gtm_container_id'] ) ? $input['gtm_container_id'] : '' );
     $output['ga4_measurement_id']           = brs_ga4_gtm_tracking_clean_ga4_id( isset( $input['ga4_measurement_id'] ) ? $input['ga4_measurement_id'] : '' );
     $output['exclude_admins']               = ! empty( $input['exclude_admins'] ) ? 1 : 0;
@@ -79,13 +81,30 @@ function brs_ga4_gtm_tracking_render_settings_page() {
     ?>
     <div class="wrap">
         <h1>BRS GA4/GTM Tracking</h1>
-        <p>Use this private plugin to load Google Tag Manager, pass WordPress context into the data layer, and support GA4 engagement, form, click, and WooCommerce ecommerce tracking.</p>
+        <p>Choose direct Google Analytics 4 tracking or Google Tag Manager. Both methods use the same WordPress context, engagement, click, form, and WooCommerce tracking engine.</p>
 
         <form method="post" action="options.php">
             <?php settings_fields( 'brs_ga4_gtm_tracking_settings' ); ?>
 
             <table class="form-table" role="presentation">
                 <tr>
+                    <th scope="row">Tracking Method</th>
+                    <td>
+                        <fieldset>
+                            <label>
+                                <input type="radio" name="brs_ga4_gtm_tracking_options[tracking_method]" value="direct" <?php checked( 'direct', brs_ga4_gtm_tracking_get_method( $options ) ); ?>>
+                                <strong>Direct GA4</strong> - load Google Analytics directly from this plugin. No GTM container is required.
+                            </label><br>
+                            <label>
+                                <input type="radio" name="brs_ga4_gtm_tracking_options[tracking_method]" value="gtm" <?php checked( 'gtm', brs_ga4_gtm_tracking_get_method( $options ) ); ?>>
+                                <strong>Google Tag Manager</strong> - load a GTM container and use the bundled GTM import.
+                            </label>
+                        </fieldset>
+                        <p class="description">Use only one method to avoid duplicate pageviews and events.</p>
+                    </td>
+                </tr>
+
+                <tr class="brs-gtm-setting">
                     <th scope="row"><label for="brs_gtm_container_id">GTM Container ID</label></th>
                     <td>
                         <input type="text" id="brs_gtm_container_id" class="regular-text" name="brs_ga4_gtm_tracking_options[gtm_container_id]" value="<?php echo esc_attr( $options['gtm_container_id'] ); ?>" placeholder="GTM-XXXXXXX">
@@ -97,7 +116,7 @@ function brs_ga4_gtm_tracking_render_settings_page() {
                     <th scope="row"><label for="brs_ga4_measurement_id">GA4 Measurement ID</label></th>
                     <td>
                         <input type="text" id="brs_ga4_measurement_id" class="regular-text" name="brs_ga4_gtm_tracking_options[ga4_measurement_id]" value="<?php echo esc_attr( $options['ga4_measurement_id'] ); ?>" placeholder="G-XXXXXXXXXX">
-                        <p class="description">The GTM import reads this value from the page, so the JSON file does not need to be edited for each client.</p>
+                        <p class="description">Required for both methods. In Direct GA4 mode, the plugin loads GA4 itself. In GTM mode, the imported tag reads this value from the page.</p>
                     </td>
                 </tr>
 
@@ -134,11 +153,10 @@ function brs_ga4_gtm_tracking_render_settings_page() {
 
         <hr>
 
+        <div class="brs-gtm-setting">
         <h2>Google Tag Manager Import</h2>
 
-        <p>
-            Download the bundled GTM import JSON file and import it into Google Tag Manager using Merge mode.
-        </p>
+        <p>Download the bundled GTM import JSON file when Google Tag Manager is selected. Direct GA4 mode does not require this file.</p>
 
         <?php if ( current_user_can( 'manage_options' ) ) : ?>
             <p>
@@ -148,33 +166,64 @@ function brs_ga4_gtm_tracking_render_settings_page() {
             </p>
         <?php endif; ?>
 
-        <p class="description">
-            Recommended GTM import setting: Merge. Use Rename conflicting tags for a fresh setup, or Overwrite conflicting tags when updating an existing BRS tracking tag.
-        </p>
+        <p class="description">Recommended GTM import setting: Merge. Use Rename conflicting tags for a fresh setup, or Overwrite conflicting tags when updating an existing BRS tracking tag.</p>
+        </div>
 
-        <hr>        
+        <hr>
 
         <h2>Status</h2>
         <table class="widefat striped" style="max-width: 760px;">
             <tbody>
-                <tr>
-                    <td>WooCommerce detected</td>
-                    <td><?php echo class_exists( 'WooCommerce' ) ? 'Yes' : 'No'; ?></td>
-                </tr>
-                <tr>
-                    <td>Tracking excluded for current user</td>
-                    <td><?php echo brs_ga4_gtm_tracking_is_tracking_excluded() ? 'Yes' : 'No'; ?></td>
-                </tr>
-                <tr>
-                    <td>GTM will load when both conditions are true</td>
-                    <td>GTM Container ID is set and current user is not excluded</td>
-                </tr>
-                <tr>
-                    <td>GA4 events will send when both conditions are true</td>
-                    <td>GA4 Measurement ID is set and the matching GTM JSON has been imported/published</td>
-                </tr>
+                <tr><td>Selected tracking method</td><td><?php echo 'direct' === brs_ga4_gtm_tracking_get_method( $options ) ? 'Direct GA4' : 'Google Tag Manager'; ?></td></tr>
+                <tr><td>WooCommerce detected</td><td><?php echo class_exists( 'WooCommerce' ) ? 'Yes' : 'No'; ?></td></tr>
+                <tr><td>Tracking excluded for current user</td><td><?php echo brs_ga4_gtm_tracking_is_tracking_excluded() ? 'Yes' : 'No'; ?></td></tr>
+                <tr><td>GA4 Measurement ID configured</td><td><?php echo ! empty( brs_ga4_gtm_tracking_clean_ga4_id( $options['ga4_measurement_id'] ) ) ? 'Yes' : 'No'; ?></td></tr>
+                <tr><td>GTM Container ID configured</td><td><?php echo ! empty( brs_ga4_gtm_tracking_clean_gtm_id( $options['gtm_container_id'] ) ) ? 'Yes' : 'No'; ?></td></tr>
             </tbody>
         </table>
+
+        <hr>
+
+        <h2 id="brs-changelog">Changelog</h2>
+        <p>The condensed changelog is intended for plugin users. The technical changelog contains implementation details for developers and maintainers.</p>
+        <?php
+        $changelog_files = array(
+            'User Changelog'      => BRS_GA4_GTM_TRACKING_DIR . 'CHANGELOG.md',
+            'Technical Changelog' => BRS_GA4_GTM_TRACKING_DIR . 'TECHNICAL-CHANGELOG.md',
+        );
+
+        foreach ( $changelog_files as $label => $file_path ) :
+            if ( ! is_readable( $file_path ) ) {
+                continue;
+            }
+            ?>
+            <details style="max-width: 900px; margin: 12px 0;" <?php echo 'User Changelog' === $label ? 'open' : ''; ?>>
+                <summary><strong><?php echo esc_html( $label ); ?></strong></summary>
+                <pre style="white-space: pre-wrap; background: #fff; border: 1px solid #ccd0d4; padding: 16px; max-height: 520px; overflow: auto;"><?php echo esc_html( file_get_contents( $file_path ) ); ?></pre>
+            </details>
+        <?php endforeach; ?>
+
+        <script>
+        (function() {
+            var radios = document.querySelectorAll('input[name="brs_ga4_gtm_tracking_options[tracking_method]"]');
+            var gtmRows = document.querySelectorAll('.brs-gtm-setting');
+
+            function updateTrackingMethodFields() {
+                var selected = document.querySelector('input[name="brs_ga4_gtm_tracking_options[tracking_method]"]:checked');
+                var showGtm = selected && selected.value === 'gtm';
+
+                gtmRows.forEach(function(row) {
+                    row.style.display = showGtm ? '' : 'none';
+                });
+            }
+
+            radios.forEach(function(radio) {
+                radio.addEventListener('change', updateTrackingMethodFields);
+            });
+
+            updateTrackingMethodFields();
+        })();
+        </script>
     </div>
     <?php
 }

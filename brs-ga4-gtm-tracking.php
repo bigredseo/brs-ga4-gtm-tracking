@@ -3,7 +3,7 @@
  * Plugin Name: BRS GA4 GTM Tracking
  * Plugin URI: https://github.com/bigredseo/brs-ga4-gtm-tracking
  * Description: WordPress plugin by Big Red SEO for direct Google Analytics 4 or Google Tag Manager tracking across WordPress and WooCommerce sites.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: Big Red SEO
  * Author URI: https://www.bigredseo.com/
  * Text Domain: brs-ga4-gtm-tracking
@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'BRS_GA4_GTM_TRACKING_VERSION', '1.1.0' );
+define( 'BRS_GA4_GTM_TRACKING_VERSION', '1.2.0' );
 define( 'BRS_GA4_GTM_TRACKING_FILE', __FILE__ );
 define( 'BRS_GA4_GTM_TRACKING_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BRS_GA4_GTM_TRACKING_URL', plugin_dir_url( __FILE__ ) );

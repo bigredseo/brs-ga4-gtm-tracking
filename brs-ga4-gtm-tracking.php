@@ -78,15 +78,97 @@ function brs_ga4_gtm_tracking_plugin_action_links( $links ) {
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'brs_ga4_gtm_tracking_plugin_action_links' );
 
 /**
- * Add plugin site and changelog links to the plugin row metadata.
+ * Add a changelog link to the plugin row metadata.
  */
 function brs_ga4_gtm_tracking_plugin_row_meta( $links, $file ) {
     if ( plugin_basename( __FILE__ ) !== $file ) {
         return $links;
     }
 
-    $links[] = '<a href="' . esc_url( admin_url( 'options-general.php?page=brs-ga4-gtm-tracking#brs-changelog' ) ) . '">' . esc_html__( 'Changelog', 'brs-ga4-gtm-tracking' ) . '</a>';
+    $changelog_url = admin_url(
+        'admin.php?page=brs-ga4-gtm-tracking-changelog'
+    );
+
+    $links[] = sprintf(
+        '<a href="%1$s">%2$s</a>',
+        esc_url( $changelog_url ),
+        esc_html__( 'Changelog', 'brs-ga4-gtm-tracking' )
+    );
 
     return $links;
 }
-add_filter( 'plugin_row_meta', 'brs_ga4_gtm_tracking_plugin_row_meta', 10, 2 );
+add_filter(
+    'plugin_row_meta',
+    'brs_ga4_gtm_tracking_plugin_row_meta',
+    10,
+    2
+);
+
+/**
+ * Register a hidden admin page for the user-facing changelog.
+ */
+function brs_ga4_gtm_tracking_register_changelog_page() {
+    add_submenu_page(
+        null,
+        __( 'BRS GA4 GTM Tracking Changelog', 'brs-ga4-gtm-tracking' ),
+        __( 'Changelog', 'brs-ga4-gtm-tracking' ),
+        'manage_options',
+        'brs-ga4-gtm-tracking-changelog',
+        'brs_ga4_gtm_tracking_render_changelog_page'
+    );
+}
+add_action(
+    'admin_menu',
+    'brs_ga4_gtm_tracking_register_changelog_page'
+);
+
+/**
+ * Render the user-facing plugin changelog.
+ */
+function brs_ga4_gtm_tracking_render_changelog_page() {
+    if ( ! current_user_can( 'manage_options' ) ) {
+        wp_die(
+            esc_html__(
+                'You do not have permission to view this page.',
+                'brs-ga4-gtm-tracking'
+            )
+        );
+    }
+
+    $changelog_file = BRS_GA4_GTM_TRACKING_DIR . 'CHANGELOG.md';
+    ?>
+    <div class="wrap">
+        <h1>
+            <?php esc_html_e(
+                'BRS GA4 GTM Tracking Changelog',
+                'brs-ga4-gtm-tracking'
+            ); ?>
+        </h1>
+
+        <p>
+            <a href="<?php echo esc_url( admin_url( 'plugins.php' ) ); ?>">
+                &larr;
+                <?php esc_html_e(
+                    'Back to Plugins',
+                    'brs-ga4-gtm-tracking'
+                ); ?>
+            </a>
+        </p>
+
+        <?php if ( is_readable( $changelog_file ) ) : ?>
+            <pre style="max-width: 1000px; padding: 20px; overflow: auto; white-space: pre-wrap; background: #fff; border: 1px solid #c3c4c7;"><?php
+                echo esc_html( file_get_contents( $changelog_file ) );
+            ?></pre>
+        <?php else : ?>
+            <div class="notice notice-warning">
+                <p>
+                    <?php esc_html_e(
+                        'The CHANGELOG.md file could not be found.',
+                        'brs-ga4-gtm-tracking'
+                    ); ?>
+                </p>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php
+}

@@ -1,9 +1,10 @@
 <?php
 /**
  * Plugin Name: BRS GA4 GTM Tracking
+ * Update URI: https://github.com/bigredseo/brs-ga4-gtm-tracking
  * Plugin URI: https://github.com/bigredseo/brs-ga4-gtm-tracking
  * Description: WordPress plugin by Big Red SEO for direct Google Analytics 4 or Google Tag Manager tracking across WordPress and WooCommerce sites.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Big Red SEO
  * Author URI: https://www.bigredseo.com/
  * Text Domain: brs-ga4-gtm-tracking
@@ -13,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-define( 'BRS_GA4_GTM_TRACKING_VERSION', '1.2.0' );
+define( 'BRS_GA4_GTM_TRACKING_VERSION', '1.2.1' );
 define( 'BRS_GA4_GTM_TRACKING_FILE', __FILE__ );
 define( 'BRS_GA4_GTM_TRACKING_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BRS_GA4_GTM_TRACKING_URL', plugin_dir_url( __FILE__ ) );
@@ -171,4 +172,28 @@ function brs_ga4_gtm_tracking_render_changelog_page() {
         <?php endif; ?>
     </div>
     <?php
+}
+
+if ( ! class_exists( 'BRS_Public_GitHub_Updater', false ) ) {
+	require_once plugin_dir_path( __FILE__ )
+		. 'includes/class-brs-public-github-updater.php';
+}
+
+if ( class_exists( 'BRS_Public_GitHub_Updater', false ) ) {
+	BRS_Public_GitHub_Updater::register(
+		array(
+			'plugin_file'  => __FILE__,
+			'owner'        => 'bigredseo',
+			'repository'   => 'brs-ga4-gtm-tracking',
+			'asset_name'   => 'brs-ga4-gtm-tracking-{version}.zip',
+			'slug'         => 'brs-ga4-gtm-tracking',
+			'name'         => 'BRS GA4 GTM Tracking',
+			'description'  => '<p>WordPress plugin by Big Red SEO for loading Google Tag Manager and supporting GA4 tracking across WordPress and WooCommerce sites.</p>',
+			'author'       => 'Big Red SEO',
+			'homepage'     => '',
+			'requires_php' => '',
+			'requires_wp'  => '',
+			'tested_wp'    => '',
+		)
+	);
 }

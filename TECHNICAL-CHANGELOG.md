@@ -1,5 +1,17 @@
 # Technical Changelog
 
+## 1.2.1 - 2026-08-08 - Plugin Update Functionality
+
+### Added
+- Added `includes/class-brs-public-github-updater.php`.
+- Registered the BRS Public GitHub Updater in the main plugin bootstrap.
+- Added the GitHub `Update URI` plugin header.
+
+### Changed
+- Updated `.github/workflows/release-plugin.yml`.
+- GitHub Releases now use the full `CHANGELOG.md` as release notes.
+- Updated Composer configuration/dependencies as required by the current BRS plugin development standard.
+
 ## 1.2.0 - 2026-08-07 - Improved content tracking and changelog access
 
 - Added SEO-aware primary taxonomy detection.

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.1 - 2026-08-08 - Plugin Update Functionality
+
+### Changed
+- Added support for automatic updates from public GitHub releases.
+- Updated the plugin release packaging process.
+
 ## 1.2.0 - 2026-08-07 - Improved content tracking and changelog access
 
 - Improved category tracking for WordPress posts and WooCommerce products.

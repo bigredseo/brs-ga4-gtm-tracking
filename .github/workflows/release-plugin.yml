@@ -167,6 +167,22 @@ jobs:
           echo "Release asset: $ASSET_NAME"
           unzip -l "$ASSET_NAME"
 
+      - name: Build release notes from changelog
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          RELEASE_NOTES="$RUNNER_TEMP/release-notes.md"
+
+          if [[ ! -s CHANGELOG.md ]]; then
+            echo "::error::CHANGELOG.md is missing or empty"
+            exit 1
+          fi
+
+          cp CHANGELOG.md "$RELEASE_NOTES"
+
+          echo "RELEASE_NOTES=$RELEASE_NOTES" >> "$GITHUB_ENV"         
+
       - name: Create tag and GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -177,5 +193,5 @@ jobs:
           gh release create "v$VERSION" "$ASSET_NAME" \
             --target "$GITHUB_SHA" \
             --title "BRS GA4 GTM Tracking $VERSION" \
-            --generate-notes \
+            --notes-file "$RELEASE_NOTES" \
             --latest

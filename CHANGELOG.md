@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0 - 2026-08-07 - Improved content tracking and changelog access
+
+- Improved category tracking for WordPress posts and WooCommerce products.
+- Added support for Rank Math and Yoast SEO primary categories, with automatic fallback when no primary category is set.
+- Added tracking for secondary categories and category hierarchy.
+- Added a dedicated changelog page and easier access from the Plugins screen.
+- Improved changelog navigation and fallback handling.
+
 ## [1.1.0] - 2026-07-22 - Direct GA4 or GTM Setup
 - Added a choice between Direct GA4 and Google Tag Manager tracking.
 - Direct GA4 mode now works with only a GA4 Measurement ID.

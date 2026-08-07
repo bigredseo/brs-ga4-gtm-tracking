@@ -1,5 +1,26 @@
 # Technical Changelog
 
+## 1.2.0 - 2026-08-07 - Improved content tracking and changelog access
+
+- Added SEO-aware primary taxonomy detection.
+  - Rank Math primary terms are checked first.
+  - Yoast SEO primary terms are checked second.
+  - The deepest assigned hierarchical term is used as a fallback.
+- Added validation to ensure an SEO-selected primary term is actually assigned to the post.
+- Added `primary_category_source` reporting with `rank_math`, `yoast`, or `fallback` values.
+- Added `secondary_categories` containing all directly assigned categories except the selected primary category.
+- Added `categories` containing all directly assigned categories in a deterministic, alphabetically sorted list.
+- Added `category_root` reporting for the highest-level category in the selected primary category hierarchy.
+- Added `category_path` reporting for the full selected category hierarchy, such as `Email > Gmail`.
+- Extended taxonomy context handling to WooCommerce product categories.
+- Kept the existing `primary_category` field for backwards compatibility.
+- Updated the backwards-compatible primary-term helper to use SEO-defined primary terms before hierarchical fallback.
+- Removed the redundant `category_child` field from the planned category context.
+- Existing Direct GA4 and GTM event handling automatically inherits the expanded content context without requiring separate event-level changes.
+- Added a dedicated changelog page in the WordPress admin.
+- Added easier changelog access from the Plugins screen.
+- Added a return link and fallback notice when changelog content is unavailable.
+
 ## [1.1.0] - 2026-07-22 - Direct GA4 or GTM Setup
 ### Added
 - Added the `tracking_method` option with supported values of `direct` and `gtm`.

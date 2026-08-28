@@ -1,6 +1,53 @@
 {
     "packages": [
         {
+            "name": "php-stubs/woocommerce-stubs",
+            "version": "v11.0.0",
+            "version_normalized": "11.0.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-stubs/woocommerce-stubs.git",
+                "reference": "923dd29055713886efd7f85ea2510b9c6955a714"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-stubs/woocommerce-stubs/zipball/923dd29055713886efd7f85ea2510b9c6955a714",
+                "reference": "923dd29055713886efd7f85ea2510b9c6955a714",
+                "shasum": ""
+            },
+            "require": {
+                "php-stubs/wordpress-stubs": "^5.3 || ^6.0 || ^7.0"
+            },
+            "require-dev": {
+                "php": "~7.1 || ~8.0",
+                "php-stubs/generator": "^0.9.0"
+            },
+            "suggest": {
+                "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
+                "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
+            },
+            "time": "2026-08-04T19:31:58+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "WooCommerce function and class declaration stubs for static analysis.",
+            "homepage": "https://github.com/php-stubs/woocommerce-stubs",
+            "keywords": [
+                "PHPStan",
+                "static analysis",
+                "woocommerce",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/php-stubs/woocommerce-stubs/issues",
+                "source": "https://github.com/php-stubs/woocommerce-stubs/tree/v11.0.0"
+            },
+            "install-path": "../php-stubs/woocommerce-stubs"
+        },
+        {
             "name": "php-stubs/wordpress-stubs",
             "version": "v7.0.1",
             "version_normalized": "7.0.1.0",
@@ -58,6 +105,7 @@
     ],
     "dev": true,
     "dev-package-names": [
+        "php-stubs/woocommerce-stubs",
         "php-stubs/wordpress-stubs"
     ]
 }

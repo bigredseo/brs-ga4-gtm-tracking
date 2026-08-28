@@ -1,8 +1,13 @@
 # Changelog
 
+---
+
+## 1.2.2 – WooCommerce Product Loop Compatibility Fix
+
+- Fixed WooCommerce product archive tracking when query results return product IDs instead of WP_Post objects.
+
 ## 1.2.1 - 2026-08-08 - Plugin Update Functionality
 
-### Changed
 - Added support for automatic updates from public GitHub releases.
 - Updated the plugin release packaging process.
 

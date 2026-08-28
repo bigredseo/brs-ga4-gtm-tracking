@@ -1,4 +1,14 @@
 # Technical Changelog
+---
+
+## 1.2.2 - WooCommerce Product Loop Compatibility Fix
+
+- Updated WooCommerce product-loop handling in `brs_ga4_gtm_tracking_wc_output_page_events()`.
+- Added support for `$wp_query->posts` entries returned as either `WP_Post` objects or numeric post IDs.
+- Prevented PHP warnings caused by attempting to access `->ID` on integer values.
+- Added validation for invalid or unsupported post values before processing.
+- Added a defensive check to skip products when `wc_get_product()` does not return a valid product object.
+- Preserved existing GA4 `view_item_list` event behavior and item indexing.
 
 ## 1.2.1 - 2026-08-08 - Plugin Update Functionality
 

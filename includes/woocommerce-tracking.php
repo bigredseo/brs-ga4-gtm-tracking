@@ -278,7 +278,23 @@ function brs_ga4_gtm_tracking_wc_output_page_events() {
                     break;
                 }
 
-                $product = wc_get_product( $post->ID );
+                if ( $post instanceof WP_Post ) {
+                    $product_id = $post->ID;
+                } elseif ( is_numeric( $post ) ) {
+                    $product_id = absint( $post );
+                } else {
+                    continue;
+                }
+
+                if ( ! $product_id ) {
+                    continue;
+                }
+
+                $product = wc_get_product( $product_id );
+
+                if ( ! $product ) {
+                    continue;
+                }                
                 $item    = brs_ga4_gtm_tracking_wc_product_item( $product, 1, $index );
 
                 if ( ! empty( $item ) ) {

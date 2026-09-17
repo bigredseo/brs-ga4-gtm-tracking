@@ -2,6 +2,11 @@
 
 ---
 
+## 1.2.3 - GitHub Updater Compatibility
+- Updated the bundled `BRS_Public_GitHub_Updater` to the current shared implementation.
+- Added support for `BRS_Public_GitHub_Updater::read_plugin_headers()`.
+- Prevents fatal errors caused by an older updater class being loaded before another BRS plugin that expects the newer shared updater API.
+
 ## 1.2.2 – WooCommerce Product Loop Compatibility Fix
 
 - Fixed WooCommerce product archive tracking when query results return product IDs instead of WP_Post objects.
